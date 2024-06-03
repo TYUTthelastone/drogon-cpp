@@ -37,7 +37,14 @@ void WebSocketTest::handleNewConnection(const HttpRequestPtr &req,
     LOG_DEBUG << "new websocket connection!";
     conn->send("haha!!!");
     Subscriber s;
-    s.chatRoomName_ = req->getParameter("room_name");
+    if (req->getMatchedPathPattern() == "/chat/[^/]+")
+    {
+        s.chatRoomName_ = req->getOriginalPath().substr(6);
+    }
+    else
+    {
+        s.chatRoomName_ = req->getParameter("room_name");
+    }
     s.id_ = chatRooms_.subscribe(s.chatRoomName_,
                                  [conn](const std::string &topic,
                                         const std::string &message) {

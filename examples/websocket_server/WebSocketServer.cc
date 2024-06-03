@@ -14,7 +14,7 @@ class WebSocketChat : public drogon::WebSocketController<WebSocketChat>
                              const WebSocketConnectionPtr &) override;
     WS_PATH_LIST_BEGIN
     WS_PATH_ADD("/chat", Get);
-    WS_ADD_PATH_VIA_REGEX("/[^/]*", Get);
+    WS_ADD_PATH_VIA_REGEX("/chat/[^/]+", Get);
     WS_PATH_LIST_END
   private:
     PubSubService<std::string> chatRooms_;
@@ -56,7 +56,14 @@ void WebSocketChat::handleNewConnection(const HttpRequestPtr &req,
     LOG_DEBUG << "new websocket connection!";
     conn->send("haha!!!");
     Subscriber s;
-    s.chatRoomName_ = req->getParameter("room_name");
+    if (req->getMatchedPathPattern() == "/chat/[^/]+")
+    {
+        s.chatRoomName_ = req->getOriginalPath().substr(6);
+    }
+    else
+    {
+        s.chatRoomName_ = req->getParameter("room_name");
+    }
     s.id_ = chatRooms_.subscribe(s.chatRoomName_,
                                  [conn](const std::string &topic,
                                         const std::string &message) {
