@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
         server = "wss://echo.websocket.events/.ws";
         path = "/";
     }
-    //custom chat topic
-    else if(argc > 2 && std::string(argv[1]) == "-n")
+    // custom chat topic
+    else if (argc > 2 && std::string(argv[1]) == "-n")
     {
         server = "ws://127.0.0.1";
         port = 8848;
