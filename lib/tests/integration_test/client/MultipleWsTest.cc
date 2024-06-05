@@ -98,9 +98,7 @@ DROGON_TEST(MultipleWsRegExpTest)
                 }
             });
         auto req = HttpRequest::newHttpRequest();
-        std::string path = "/chat/";
-        path += std::to_string(i / 10);
-        req->setPath(path);
+        req->setPath("/chat/newTopic");
         wsPtr->connectToServer(
             req,
             [pack, i](ReqResult r,
